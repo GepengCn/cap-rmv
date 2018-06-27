@@ -1,0 +1,28 @@
+{
+  "name": "cap-rmv",
+  "version": "0.0.1",
+  "description": "Real-time Multiplayer Video(实时多人视频)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GepengCn/cap-rmv.git"
+  },
+  "author": "Gepeng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GepengCn/cap-rmv/issues"
+  },
+  "homepage": "https://github.com/GepengCn/cap-rmv#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
+    "moment": "^2.22.2",
+    "path": "^0.12.7",
+    "socket.io": "^2.1.1",
+    "underscore": "^1.9.1"
+  }
+}
