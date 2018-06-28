@@ -47,3 +47,17 @@ var server = https.createServer(options,app).listen(port);
 var io = socketIO.listen(server);
 
 console.log("https://localhost:"+port);
+
+
+/**
+ * 服务端日志函数
+ * */
+function log(info){
+  moment.locale('zh-cn');
+  var now=moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:ss");
+  console.log(now+">>>>  "+info);
+}
+
+io.on('connection',function (socket) {
+  log(socket.id+'初始化连接...');
+});
