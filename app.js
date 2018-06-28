@@ -46,7 +46,10 @@ var server = https.createServer(options,app).listen(port);
  * */
 var io = socketIO.listen(server);
 
-console.log("https://localhost:"+port);
+console.log("https://localhost:"+port+"?msgFrom=gp");
+console.log("https://localhost:"+port+"?msgFrom=ql&msgTo=gp");
+
+var UserList = new Array();
 
 
 /**
@@ -58,6 +61,97 @@ function log(info){
   console.log(now+">>>>  "+info);
 }
 
+var UserManager = {
+
+};
+UserManager.queryByAcctLogin = function(acctLogin){
+  var index = UserManager.contain({
+    acctLogin:acctLogin,
+  },'acctLogin');
+  if(index!=-1){
+    return UserList[index];
+  }
+  return null;
+}
+UserManager.queryByUserId = function(userId){
+  var index = UserManager.contain({
+    userId:userId,
+  },'userId');
+  if(index!=-1){
+    return UserList[index];
+  }
+  return null;
+}
+
+UserManager.add = function (user) {
+  var index = UserManager.contain(user,'acctLogin');
+  if(index != -1){
+    UserManager.remove(index);
+  }
+  UserList.push(user);
+};
+UserManager.remove = function(index){
+  UserList.splice(index,1);
+}
+UserManager.contain = function(user,type){
+  if(!user){
+    return -1;
+  }
+  for(var i=0;i<UserList.length;i++){
+    var User = UserList[i];
+    switch (type){
+      case 'userId':
+        if(user.userId == User.userId){
+          return i;
+        }
+        break;
+      case 'acctLogin':
+        if(user.acctLogin == User.acctLogin){
+          return i;
+        }
+        break;
+      default:
+        continue;
+    }
+  }
+  return -1;
+}
+function messageSendManager(socket,message){
+  message=JSON.parse(message);
+  message.msgFrom = UserManager.queryByUserId(socket.id).acctLogin;
+  var msgToSocket = underscore.findWhere(io.sockets.sockets,{name:message.msgTo});
+  if(!msgToSocket){
+    log('2.不存在的接收人'+message.msgTo);
+    return;
+  }
+  msgToSocket.emit('onMessageListener',JSON.stringify(message));
+}
+
 io.on('connection',function (socket) {
   log(socket.id+'初始化连接...');
+
+  socket.on('login',function (acctLogin) {
+    UserManager.add({
+      userId:socket.id,
+      acctLogin:acctLogin,
+      ts:new Date().getTime(),
+      dr:'N'
+    });
+    socket.name = acctLogin;
+  });
+
+
+  socket.on('disconnect',function () {
+    var index = UserManager.contain({
+      userId:socket.id
+    },'userId');
+    if(index != -1){
+      UserManager.remove(index);
+    }
+  });
+
+
+  socket.on('onMessageRouter',function (message) {
+    messageSendManager(socket,message);
+  });
 });

@@ -1,6 +1,8 @@
 # cap-rmv
 Real-time Multiplayer Video(实时多人视频)
-#### 0.通过openfire发送一个连接，参数是msgFrom,msgTo
+
+#### 0.通过openfire发送一个连接(from,to)
+
 #### 1.连接信令服务器,需要传入登录名msgFrom
 
 #### 2.获取本地视频，getUserMedia,播放视频流

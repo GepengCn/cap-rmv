@@ -1,0 +1,27 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+html{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+body{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+#localVideo{
+
+}
+#remoteVideo{
+  border: 3px solid white;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 20%;
+  width: 20%;
+  z-index: 9999;
+  display: none;
+}

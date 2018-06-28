@@ -2,6 +2,7 @@ main();
 
 //====================================程序入口===================================================================
 function main() {
+  var toLaunch =false;
   msgFrom = getParameter('msgFrom');
   msgTo = getParameter('msgTo');
   if(isNullOrEmpty(msgFrom)){
@@ -13,17 +14,22 @@ function main() {
   if(!isNullOrEmpty(msgTo)){
     toLaunch = true;
     log('msgTo='+msgTo);
+    log('toLaunch='+toLaunch);
   }
+  //连接socket.io信令服务器
   connect();
+  //登录
+  login(msgFrom);
+
   log('getLocalMedia');
   //播放本地视频流
   getLocalMedia(function () {
+    log('toLaunch='+toLaunch);
     if(toLaunch){
       log('正在发起RTCPeerConnection连接');
-
-
+      getRTCPeerConnection(msgTo);
       log('正在发起offer');
-
+      offer(msgTo);
     }
   });
 }
@@ -39,7 +45,7 @@ var msgTo;
 /**
  * 是否发起视频
  * */
-var toLaunch =false;
+
 /**
  * 本地视频流
  * */
@@ -116,7 +122,10 @@ function getLocalMedia(callback){
   log('开始获取本地视频流');
   navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: true
+    video: {
+      width:$('body').width(),
+      height:$('body').height()
+    }
   }).then(function(stream){
     log('成功获取本地视频流');
     localVideo.srcObject=stream;
@@ -134,11 +143,10 @@ function getLocalMedia(callback){
  * 2.注册addstream监听
  * 3.添加localStream
  * */
-function getRTCPeerConnection(){
+function getRTCPeerConnection(msgTo){
   peerConn = new RTCPeerConnection(null);
   peerConn.onicecandidate = function (event) {
     if (event.candidate) {
-      log('进入onicecandidate回调函数，发送消息类型[candidate]');
       sendMsgTo({
         msgTo:msgTo,
         sdpMLineIndex:event.candidate.sdpMLineIndex,
@@ -149,12 +157,72 @@ function getRTCPeerConnection(){
   };
   peerConn.onaddstream = function (event) {
     remoteStream = event.stream;
-    remoteVideo.srcObject = remoteStream;
+    remoteVideo.srcObject = event.stream;
+    $('#remoteVideo').show();
   }
   peerConn.addStream(localStream);
+}
+
+function offer(msgTo){
+  log("发送offer给"+msgTo);
+  peerConn.createOffer(function (offer) {
+    peerConn.setLocalDescription(offer);
+    sendMsgTo({
+      type:'offer',
+      offer:offer,
+      msgTo:msgTo
+    })
+  }, function (error) {
+    log(error);
+  });
+}
+function answer(msgTo){
+  log("发送answer给"+msgTo);
+  peerConn.createAnswer().then(
+    function (answer) {
+      peerConn.setLocalDescription(answer);
+      sendMsgTo({
+        type:'answer',
+        answer:answer,
+        msgTo:msgTo
+      })
+    },
+    function (error) {
+      log(error);
+    });
 }
 //====================================socket.io===================================================================
 
 function connect(){
   socket = io.connect();
+  socket.on('onMessageListener',function (message) {
+    message = JSON.parse(message);
+    switch (message.type){
+      case 'candidate':
+        log('监听:candidate');
+        peerConn.addIceCandidate(new RTCIceCandidate({
+          sdpMLineIndex: message.sdpMLineIndex,
+          candidate: message.candidate
+        }));
+        break;
+      case 'offer':
+        var offer = message.offer;
+        log('监听:offer');
+        getRTCPeerConnection(message.msgFrom);
+        peerConn.setRemoteDescription(new RTCSessionDescription(message.offer));
+        answer(message.msgFrom);
+        break;
+      case 'answer':
+        //设置远程连接描述
+        log('监听:answer');
+        peerConn.setRemoteDescription(new RTCSessionDescription(message.answer));
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+function login(acctLogin){
+  socket.emit('login',acctLogin);
 }
