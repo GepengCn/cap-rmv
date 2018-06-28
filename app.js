@@ -46,8 +46,6 @@ var server = https.createServer(options,app).listen(port);
  * */
 var io = socketIO.listen(server);
 
-console.log("https://localhost:"+port+"?msgFrom=gp");
-console.log("https://localhost:"+port+"?msgFrom=ql&msgTo=gp");
 
 var UserList = new Array();
 
@@ -126,7 +124,14 @@ function messageSendManager(socket,message){
   }
   msgToSocket.emit('onMessageListener',JSON.stringify(message));
 }
-
+function logUserList(){
+  var userStr="";
+  for(var i=0;i<UserList.length;i++){
+    var User = UserList[i];
+    userStr+=User.acctLogin+',';
+  }
+  log('在线用户数:['+UserList.length+'],当前在线用户:'+userStr);
+}
 io.on('connection',function (socket) {
   log(socket.id+'初始化连接...');
 
@@ -138,6 +143,7 @@ io.on('connection',function (socket) {
       dr:'N'
     });
     socket.name = acctLogin;
+    logUserList();
   });
 
 
@@ -148,6 +154,7 @@ io.on('connection',function (socket) {
     if(index != -1){
       UserManager.remove(index);
     }
+    logUserList();
   });
 
 

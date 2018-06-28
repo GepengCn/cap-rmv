@@ -144,6 +144,7 @@ function getLocalMedia(callback){
  * 3.添加localStream
  * */
 function getRTCPeerConnection(msgTo){
+  log('getRTCPeerConnection');
   peerConn = new RTCPeerConnection(null);
   peerConn.onicecandidate = function (event) {
     if (event.candidate) {
@@ -157,8 +158,7 @@ function getRTCPeerConnection(msgTo){
   };
   peerConn.onaddstream = function (event) {
     remoteStream = event.stream;
-    remoteVideo.srcObject = event.stream;
-    $('#remoteVideo').show();
+    remoteVideo.srcObject = remoteStream;
   }
   peerConn.addStream(localStream);
 }
