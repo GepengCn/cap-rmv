@@ -28,22 +28,22 @@ var underscore = require('underscore');
  * 引入https证书
  * */
 var options= {
-  key:fs.readFileSync('./ssl/214731414140981.key'),
-  cert:fs.readFileSync('./ssl/214731414140981.pem')
+  key:fs.readFileSync('./ssl/2_www.coolweb.club.key'),
+  cert:fs.readFileSync('./ssl/1_www.coolweb.club_bundle.crt')
 };
 
 app.get('/', function(req, res) {
   res.sendfile(__dirname+'/index.html');
 });
 
-var port=9091;
+var port=443;
 /**
  * 创建https服务并使用文件服务过滤输入输出请求
  * */
 var server = https.createServer(options,app).listen(port);
 
-console.log('https://localhost:9091/?msgFrom=gp');
-console.log('https://localhost:9091/?msgFrom=ql&msgTo=gp');
+//console.log('https://localhost:9091/?msgFrom=gp');
+//console.log('https://localhost:9091/?msgFrom=ql&msgTo=gp');
 
 /**
  * 使用SocketIO监听

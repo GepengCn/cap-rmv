@@ -1,6 +1,6 @@
 {
   "name": "cap-rmv",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Real-time Multiplayer Video(实时多人视频)",
   "main": "app.js",
   "scripts": {
