@@ -118,10 +118,13 @@ function sendMsgTo(message){
  * 调用WebRTC API调用本地获取音视频流
  * callback:回调函数　
  * */
+
+
+
 function getLocalMedia(callback){
   log('开始获取本地视频流');
   navigator.mediaDevices.getUserMedia({
-    audio: false,
+    audio: true,
     video: true
   }).then(function(stream){
     log('成功获取本地视频流');

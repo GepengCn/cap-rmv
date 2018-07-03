@@ -43,8 +43,6 @@ var port=443;
 var server = https.createServer(options,app).listen(port);
 
 console.log('项目已启动...');
-//console.log('https://localhost:9091/?msgFrom=gp');
-//console.log('https://localhost:9091/?msgFrom=ql&msgTo=gp');
 
 /**
  * 使用SocketIO监听
