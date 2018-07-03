@@ -41,6 +41,10 @@ var port=9091;
  * 创建https服务并使用文件服务过滤输入输出请求
  * */
 var server = https.createServer(options,app).listen(port);
+
+console.log('https://localhost:9091/?msgFrom=gp');
+console.log('https://localhost:9091/?msgFrom=ql&msgTo=gp');
+
 /**
  * 使用SocketIO监听
  * */
@@ -134,7 +138,6 @@ function logUserList(){
 }
 io.on('connection',function (socket) {
   log(socket.id+'初始化连接...');
-
   socket.on('login',function (acctLogin) {
     UserManager.add({
       userId:socket.id,

@@ -122,10 +122,7 @@ function getLocalMedia(callback){
   log('开始获取本地视频流');
   navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: {
-      width:$('body').width(),
-      height:$('body').height()
-    }
+    video: true
   }).then(function(stream){
     log('成功获取本地视频流');
     localVideo.srcObject=stream;
@@ -145,7 +142,12 @@ function getLocalMedia(callback){
  * */
 function getRTCPeerConnection(msgTo){
   log('getRTCPeerConnection');
-  peerConn = new RTCPeerConnection(null);
+  peerConn = new RTCPeerConnection({"iceServers":[
+        {"urls":["turn:139.199.94.202:3478"],
+        "username":"superadmin",
+        "credential":"tladmin*123"}],
+    "iceTransportPolicy":"all","iceCandidatePoolSize":"8"}
+    );
   peerConn.onicecandidate = function (event) {
     if (event.candidate) {
       sendMsgTo({
@@ -199,7 +201,7 @@ function connect(){
     message = JSON.parse(message);
     switch (message.type){
       case 'candidate':
-        log('监听:candidate');
+        log('监听:candidate,'+message.candidate);
         peerConn.addIceCandidate(new RTCIceCandidate({
           sdpMLineIndex: message.sdpMLineIndex,
           candidate: message.candidate
