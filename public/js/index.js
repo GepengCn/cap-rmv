@@ -150,8 +150,8 @@ function getRTCPeerConnection(msgTo){
           "turn:139.199.94.202:3478?transport=udp",
             "turn:139.199.94.202:3478?transport=tcp"
           ],
-        "username":"demo",
-        "credential":"0xe6220016220f62a6bddc4b4552ffc5ba"
+        "username":"superadmin",
+        "credential":"0xdf916731fe9362e354fd6e92c6f1ac39"
         },
         {
           "urls":["stun:stun.l.google.com:19302"]
