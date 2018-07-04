@@ -145,17 +145,13 @@ function getLocalMedia(callback){
  * */
 function getRTCPeerConnection(msgTo){
   log('getRTCPeerConnection');
-  peerConn = new RTCPeerConnection({"iceServers":[
-        {"urls":[
-          "turn:139.199.94.202:3478?transport=udp",
-            "turn:139.199.94.202:3478?transport=tcp"
-          ],
-        "username":"superadmin",
-        "credential":"0xdf916731fe9362e354fd6e92c6f1ac39"
-        },
-        {
-          "urls":["stun:stun.l.google.com:19302"]
-        }],
+  peerConn = new RTCPeerConnection({"iceServers":[{"url": "stun:139.199.94.202:3478"},
+        {"url":"stun:stun.139.199.94.202:3478"},
+        {"url":"stun:stun.139.199.94.202:3478transport=tcp",  "credential":"0xdf916731fe9362e354fd6e92c6f1ac39",
+          "username": "superadmin"},
+        {"url": "stun:stun.139.199.94.202:3478?transport=udp",
+          "credential":"0xdf916731fe9362e354fd6e92c6f1ac39",
+          "username": "superadmin"}],
     "iceTransportPolicy":"all","iceCandidatePoolSize":"8"}
     );
   peerConn.onicecandidate = function (event) {
