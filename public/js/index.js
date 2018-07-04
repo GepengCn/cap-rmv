@@ -151,7 +151,7 @@ function getRTCPeerConnection(msgTo){
             "turn:139.199.94.202:3478?transport=tcp"
           ],
         "username":"superadmin",
-        "credential":"0xd53f31b2ce737cd3555c79d174457f04"
+        "credential":"tladmin*123"
         }],
     "iceTransportPolicy":"all","iceCandidatePoolSize":"8"}
     );
