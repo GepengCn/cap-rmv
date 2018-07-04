@@ -151,7 +151,7 @@ function getRTCPeerConnection(msgTo){
             "turn:139.199.94.202:3478?transport=tcp"
           ],
         "username":"superadmin",
-        "credential":"tladmin*123"
+        "credential":"0x80a4d304d0abc29a6ce656547042280e"
         },
         {
           "urls":["stun:stun.l.google.com:19302"]
