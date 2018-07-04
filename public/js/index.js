@@ -146,9 +146,16 @@ function getLocalMedia(callback){
 function getRTCPeerConnection(msgTo){
   log('getRTCPeerConnection');
   peerConn = new RTCPeerConnection({"iceServers":[
-        {"urls":["turn:139.199.94.202:3478"],
+        {"urls":[
+          "turn:139.199.94.202:3478?transport=udp",
+            "turn:139.199.94.202:3478?transport=tcp"
+          ],
         "username":"superadmin",
-        "credential":"tladmin*123"}],
+        "credential":"tladmin*123"
+        },
+        {
+          "urls":["stun:stun.l.google.com:19302"]
+        }],
     "iceTransportPolicy":"all","iceCandidatePoolSize":"8"}
     );
   peerConn.onicecandidate = function (event) {
