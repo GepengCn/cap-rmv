@@ -145,15 +145,17 @@ function getLocalMedia(callback){
  * */
 function getRTCPeerConnection(msgTo){
   log('getRTCPeerConnection');
-  peerConn = new RTCPeerConnection({"iceServers":[
+  peerConn = new RTCPeerConnection({"iceServers":[{
+        "urls":"stun:stun.l.google.com:19302"
+         },
         {"urls":[
           "turn:139.199.94.202:3478?transport=udp",
-            "turn:139.199.94.202:3478?transport=tcp"
+          "turn:139.199.94.202:3478?transport=tcp"
           ],
         "username":"superadmin",
         "credential":"0xe1e38dc42722c4eafce651ca9987103e"
-        }],
-    "iceTransportPolicy":"all","iceCandidatePoolSize":"8"}
+        }]
+      }
     );
   peerConn.onicecandidate = function (event) {
     if (event.candidate) {
