@@ -36,7 +36,7 @@ app.get('/', function(req, res) {
   res.sendfile(__dirname+'/index.html');
 });
 
-var port=9091;
+var port=443;
 /**
  * 创建https服务并使用文件服务过滤输入输出请求
  * */
