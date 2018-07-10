@@ -36,7 +36,7 @@ app.get('/', function(req, res) {
   res.sendfile(__dirname+'/index.html');
 });
 
-var port=443;
+var port=9091;
 /**
  * 创建https服务并使用文件服务过滤输入输出请求
  * */
@@ -163,4 +163,9 @@ io.on('connection',function (socket) {
   socket.on('onMessageRouter',function (message) {
     messageSendManager(socket,message);
   });
+
+  socket.on('streamClose',function () {
+    io.sockets
+  });
 });
+

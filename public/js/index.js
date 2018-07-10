@@ -71,6 +71,18 @@ var peerConn;
  * */
 var socket;
 
+var iceServer = {"iceServers":[{
+    "urls":"stun:139.199.94.202:3478"
+  },
+    {"urls":[
+        "turn:139.199.94.202:3478?transport=udp",
+        "turn:139.199.94.202:3478?transport=tcp"
+      ],
+      "username":"superadmin",
+      "credential":"superadmin"
+    }]
+}
+
 //====================================全局函数===================================================================
 /**
  * url?param1=xxx&param2=xxx
@@ -145,17 +157,7 @@ function getLocalMedia(callback){
  * */
 function getRTCPeerConnection(msgTo){
   log('getRTCPeerConnection');
-  peerConn = new RTCPeerConnection({"iceServers":[{
-        "urls":"stun:139.199.94.202:3478"
-         },
-        {"urls":[
-          "turn:139.199.94.202:3478?transport=udp",
-          "turn:139.199.94.202:3478?transport=tcp"
-          ],
-        "username":"superadmin",
-        "credential":"superadmin"
-        }]
-      }
+  peerConn = new RTCPeerConnection(iceServer
     );
   peerConn.onicecandidate = function (event) {
     if (event.candidate) {
@@ -222,12 +224,16 @@ function connect(){
         getRTCPeerConnection(message.msgFrom);
         peerConn.setRemoteDescription(new RTCSessionDescription(message.offer));
         answer(message.msgFrom);
+        msgTo = message.msgFrom;
         break;
       case 'answer':
         //设置远程连接描述
         log('监听:answer');
         peerConn.setRemoteDescription(new RTCSessionDescription(message.answer));
         break;
+      case 'close':
+        log('监听:close');
+        close();
       default:
         break;
     }
@@ -237,3 +243,31 @@ function connect(){
 function login(acctLogin){
   socket.emit('login',acctLogin);
 }
+
+function close(){
+  log('关闭视频流');
+  if(peerConn!=null){
+    peerConn.close();
+    peerConn=null;
+    $('#remoteVideo').hide();
+  }
+  if(localStream!=null){
+    localStream.getTracks().forEach(function (track) {
+      track.stop();
+    });
+    localStream=null;
+    $('#localVideo').hide();
+  }
+}
+
+//====================================界面事件区域===================================================================
+$('#btnClose').click(function () {
+  close();
+  log('msgTo='+msgTo);
+  if(!isNullOrEmpty(msgTo)){
+    sendMsgTo({
+      type:'close',
+      msgTo:msgTo
+    })
+  }
+});

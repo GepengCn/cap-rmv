@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Real-time Multiplayer Video</title>
+  <title>实时视频通话</title>
   <link rel="stylesheet" type="text/css" href="/css/index.css" />
 </head>
 <body>
 <div>
   <video id="localVideo" muted autoplay playsinline></video>
   <video id="remoteVideo"  autoplay playsinline></video>
+  <input type="button" value="挂断" id="btnClose"/>
 </div>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="/js/jquery.min.js"></script>
